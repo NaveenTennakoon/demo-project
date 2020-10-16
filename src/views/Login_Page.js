@@ -11,27 +11,28 @@ class Login extends Component {
         super(props);
         this.state = {
             islogged: false,
-            loginParams: {
-                user_name: "",
-                user_password: ""
+            login_params: {
+                username: "",
+                password: ""
             }
         };
     }
 
     handleFormChange = event => {
-        let loginParamsNew = { ...this.state.loginParams };
+        let login_params_new = { ...this.state.login_params };
         let val = event.target.value;
-        loginParamsNew[event.target.name] = val;
+        login_params_new[event.target.name] = val;
         this.setState({
-            loginParams: loginParamsNew
+            login_params: login_params_new
         });
     };
  
     login = event => {
-        let user_name = this.state.loginParams.user_name;
-        let user_password = this.state.loginParams.user_password;
-        if (user_name === "admin" && user_password === "123") {
+        let username = this.state.login_params.username;
+        let password = this.state.login_params.password;
+        if (username === "admin" && password === "123") {
             localStorage.setItem("token", "T");
+            localStorage.setItem("username", username);
             this.setState({
                 islogged: true
             });
@@ -56,7 +57,7 @@ class Login extends Component {
                     required
                     fullWidth
                     label="Username"
-                    name="user_name"
+                    name="username"
                     autoFocus
                     onChange={this.handleFormChange}
                 />
@@ -65,7 +66,7 @@ class Login extends Component {
                     margin="normal"
                     required
                     fullWidth
-                    name="user_password"
+                    name="password"
                     label="Password"
                     type="password"
                     onChange={this.handleFormChange}

@@ -14,7 +14,7 @@ class Home extends Component {
     }
 
     signOut = () => {
-        localStorage.removeItem("token");
+        localStorage.clear();
         this.setState({
             islogout: true
         });
@@ -24,11 +24,10 @@ class Home extends Component {
         if (this.state.islogout) {
             return <Redirect to="/login" />;
         }
-        const { match } = this.props;
         return (
         <Container component="main" maxWidth="xs">
             <Typography component="h1" variant="h5">
-                Welcome
+                Welcome {localStorage.getItem("username")}
             </Typography>
             <Button
                 type="submit"
