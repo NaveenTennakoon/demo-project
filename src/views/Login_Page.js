@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -7,32 +7,25 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 const Login = () => {
-    const [ state , setState ] = useState({
-        username : "",
-        password : "",
-        isLogged: false
-    })
-
-    const handleFormChange = event => {
-        const { id , value } = event.target   
-        setState( prevState => ({
-            ...prevState,
-            [id] : value
-        }))
-    };
+    const [ username , setUsername ] = useState('');
+    const [ password , setPassword ] = useState('');
+    const history = useHistory();
  
-    const login = event => {
-        let username = state.username;
-        let password = state.password;
-        if (username === "admin" && password === "123") {
-            localStorage.setItem("token", "T");
-            localStorage.setItem("username", username);
-            setState( prevState => ({
-                ...prevState,
-                isLogged : true
-            }))
-        }
+    const login = (event) => {
+
         event.preventDefault();
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.addEventListener('load', () => {
+            if (JSON.parse(xhr.response).success) {
+                localStorage.setItem("token", "T");
+                localStorage.setItem("username", username);
+                history.push('/');
+            }
+        });
+        xhr.open('POST', 'https://d7tbmlp4xb.execute-api.us-west-2.amazonaws.com/dev/logintest');
+        xhr.send(JSON.stringify({ username: username, password: password }))   ;
     };
 
     if (localStorage.getItem("token")) {
@@ -53,7 +46,7 @@ const Login = () => {
                 label="Username"
                 id="username"
                 autoFocus
-                onChange={handleFormChange}
+                onChange={ (event) => { setUsername(event.target.value) }}
             />
             <TextField
                 variant="outlined"
@@ -63,7 +56,7 @@ const Login = () => {
                 id="password"
                 label="Password"
                 type="password"
-                onChange={handleFormChange}
+                onChange={ (event) => { setPassword(event.target.value) }}
             />
             <Button
                 type="submit"
